@@ -11,8 +11,10 @@
   "author": "dpshen",
   "license": "ISC",
   "dependencies": {
+    "md5": "^2.1.0",
     "react": "^0.14.6",
-    "react-dom": "^0.14.6"
+    "react-dom": "^0.14.6",
+    "reqwest": "^2.0.5"
   },
   "devDependencies": {
     "babel-loader": "^6.2.4",
