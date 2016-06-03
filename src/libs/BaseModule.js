@@ -64,41 +64,6 @@ export default class BaseModule extends React.Component{
 
     }
 
-    getCache(path, param, success, error){
-
-        var self = this;
-
-        (!success||!error) && (this.state.loading = true);
-
-        this.io.getCache(path, param, (result)=> {
-            !success && (self.state.loading = false);
-            if( success ){
-
-                if( result.success == true ){
-                    success && success( result )
-                }else if (error){
-                    error && error(result)
-                } else {
-                    this.setState({success: false, msg: result.msg})
-                    this.componentDataDidMount(result);
-                }
-            }else{
-                this.setState(result)
-                this.componentDataDidMount(result);
-            }
-
-        }, (err) => {
-            !error && (self.state.loading = false);
-            if (error) {
-                error(err)
-            } else {
-                this.setState({success: false, msg: err.msg})
-                this.componentDataDidMount({success: false, msg:"请求失败，请稍后再试"})
-            }
-        });
-    }
-
-
     componentWillUnmount(){
         //模块被卸载，取消setState方法
         // console.log(this)
