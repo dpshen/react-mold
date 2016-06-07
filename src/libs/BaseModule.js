@@ -1,7 +1,6 @@
 import React from 'react';
 import md5 from 'md5';
 import util from './util';
-import io from './io';
 import url from './url';
 import config from '../../config';
 
@@ -20,7 +19,6 @@ export default class BaseModule extends React.Component{
         this.state.loading = true;
         this.query = props.location ? props.location.query :  url.query();
         this.util = util;
-        this.io = io;
         this.config = config
         this.md5 = md5;
 
