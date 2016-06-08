@@ -2,6 +2,8 @@ var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var path = require('path');
 
+process.env.NODE_ENV = 'production';
+
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
 
 var config = {
@@ -23,7 +25,6 @@ var config = {
         ]
     },
     plugins: [
-        commonsPlugin,
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false

@@ -40,8 +40,19 @@ var config = {
 
 new WebpackDevServer(webpack(config), {
     publicPath: "/build/",
+    contentBase: "build/",
     hot: true,
-    historyApiFallback: true
+    historyApiFallback: true,
+    stats: {
+        // Config for minimal console.log mess.
+        assets: true,
+        colors: true,
+        version: false,
+        hash: true,
+        timings: true,
+        chunks: false,
+        chunkModules: true
+    }
 }).listen(3000, 'localhost', function (err, result) {
     if (err) console.log(err);
     console.log('Listening at localhost:3000');

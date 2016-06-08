@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route } from 'react-router'
+import {Route, IndexRoute, IndexRedirect } from 'react-router'
 import IndexScreen from './containers/indexScreen.js';
 import NewsScreen from './containers/newsScreen.js';
 
