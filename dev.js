@@ -35,8 +35,8 @@ var config = {
             template: 'src/template/index.html', //html模板路径
             inject: true,	//js插入的位置，true/'head'/'body'/false
             minify: { //压缩HTML文件
-                removeComments: true, //移除HTML中的注释
-                collapseWhitespace: true //删除空白符与换行符
+                removeComments: false, //移除HTML中的注释
+                collapseWhitespace: false//删除空白符与换行符
             }
         }),
         new webpack.HotModuleReplacementPlugin(),
@@ -45,6 +45,7 @@ var config = {
 };
 
 new WebpackDevServer(webpack(config), {
+    quiet: false,
     compress: false,
     hot: true,
     historyApiFallback: true,

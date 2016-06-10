@@ -2,11 +2,13 @@ var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var path = require('path');
 
+process.env.NODE_ENV = 'production';
+
 var config = {
     entry: path.resolve(__dirname, 'src/index.js'),
     output: {
         path: path.resolve(__dirname, 'build'),
-        filename: 'index.bundle.js'
+        filename: 'index.bundle.min.js'
     },
     module: {
         loaders: [{
@@ -31,6 +33,7 @@ var config = {
         //         warnings: false
         //     }
         // }),
+        // new webpack.NoErrorsPlugin(),
         new HtmlWebpackPlugin({
             filename: '../build/index.html', //生成的html存放路径，相对于path
             template: 'src/template/index.html', //html模板路径

@@ -4,6 +4,7 @@
   "description": "",
   "main": "src/",
   "scripts": {
+    "start": "node dev.js",
     "clear": "rm -rf build",
     "build": "npm run clear && webpack && npm run dist",
     "dev": "node dev.js",
