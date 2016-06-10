@@ -3,18 +3,19 @@ var WebpackDevServer = require('webpack-dev-server');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var path = require('path');
 
+
 var config = {
-    // entry: path.resolve(__dirname, 'src/index.js'),
     entry: {
         index: [
             'webpack-dev-server/client?http://localhost:3000',
             'webpack/hot/only-dev-server',
             path.resolve(__dirname, 'src/index.js')
         ]
-    },
+    }
+    ,
     output: {
-        path: path.resolve(__dirname, 'build'),
-        filename: 'index.bundle.js'
+        path: path.join(__dirname, 'dev'),
+        filename: '[name].bundle.js'
     },
     module: {
         loaders: [{
@@ -24,10 +25,15 @@ var config = {
         }]
     },
     plugins: [
+        new webpack.DefinePlugin({
+            "process.env": {
+                NODE_ENV: JSON.stringify("development")
+            }
+        }),
         new HtmlWebpackPlugin({
-            filename: '../build/index.html', //生成的html存放路径，相对于path
+            filename: './index.html', //生成的html存放路径，相对于path
             template: 'src/template/index.html', //html模板路径
-            inject: false,	//js插入的位置，true/'head'/'body'/false
+            inject: true,	//js插入的位置，true/'head'/'body'/false
             minify: { //压缩HTML文件
                 removeComments: true, //移除HTML中的注释
                 collapseWhitespace: true //删除空白符与换行符
@@ -39,8 +45,7 @@ var config = {
 };
 
 new WebpackDevServer(webpack(config), {
-    publicPath: "/build/",
-    contentBase: "build/",
+    compress: false,
     hot: true,
     historyApiFallback: true,
     stats: {

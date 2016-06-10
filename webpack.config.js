@@ -2,10 +2,6 @@ var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var path = require('path');
 
-process.env.NODE_ENV = 'production';
-
-var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
-
 var config = {
     entry: path.resolve(__dirname, 'src/index.js'),
     output: {
@@ -25,15 +21,20 @@ var config = {
         ]
     },
     plugins: [
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
+        new webpack.DefinePlugin({
+            "process.env": {
+                NODE_ENV: JSON.stringify("production")
             }
         }),
+        // new webpack.optimize.UglifyJsPlugin({
+        //     compress: {
+        //         warnings: false
+        //     }
+        // }),
         new HtmlWebpackPlugin({
             filename: '../build/index.html', //生成的html存放路径，相对于path
             template: 'src/template/index.html', //html模板路径
-            inject: false,	//js插入的位置，true/'head'/'body'/false
+            inject: true,	//js插入的位置，true/'head'/'body'/false
             minify: { //压缩HTML文件
                 removeComments: true, //移除HTML中的注释
                 collapseWhitespace: true //删除空白符与换行符
