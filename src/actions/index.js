@@ -10,7 +10,7 @@ function fetchNews(login) {
   return {
     [CALL_API]: {
       types: [ NEWS_REQUEST, NEWS_SUCCESS, NEWS_FAILURE ],
-      endpoint: "http://rap.taobao.org/mockjsdata/4305/getNews",
+      endpoint: "/getNews",
       schema: Schemas.NEWS
     }
   }
@@ -25,7 +25,7 @@ export function loadNews(newsType, requiredFields = []) {
       return null
     }
 
-    return dispatch(fetchUser(newsType))
+    return dispatch(fetchNews(newsType))
   }
 }
 
