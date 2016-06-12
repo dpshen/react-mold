@@ -6,11 +6,11 @@ export const NEWS_FAILURE = 'NEWS_FAILURE'
 
 // Fetches a single user from Github API.
 // Relies on the custom API middleware defined in ../middleware/api.js.
-function fetchNews(login) {
+function fetchNews(newsType) {
   return {
     [CALL_API]: {
       types: [ NEWS_REQUEST, NEWS_SUCCESS, NEWS_FAILURE ],
-      endpoint: "/getNews",
+      endpoint: `/getNews?t=${newsType}`,
       schema: Schemas.NEWS
     }
   }
@@ -20,8 +20,9 @@ function fetchNews(login) {
 // Relies on Redux Thunk middleware.
 export function loadNews(newsType, requiredFields = []) {
   return (dispatch, getState) => {
-    const user = getState().entities.news[newsType]
-    if (user && requiredFields.every(key => user.hasOwnProperty(key))) {
+    console.log("loadNews",getState().entities,news)
+    const news = getState().entities.news[newsType]
+    if (news && requiredFields.every(key => news.hasOwnProperty(key))) {
       return null
     }
 
