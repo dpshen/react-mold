@@ -20,7 +20,6 @@ function fetchNews(newsType) {
 // Relies on Redux Thunk middleware.
 export function loadNews(newsType, requiredFields = []) {
   return (dispatch, getState) => {
-    console.log("loadNews",getState().entities,news)
     const news = getState().entities.news[newsType]
     if (news && requiredFields.every(key => news.hasOwnProperty(key))) {
       return null

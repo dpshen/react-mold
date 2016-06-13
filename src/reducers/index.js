@@ -5,7 +5,6 @@ import { combineReducers } from 'redux'
 
 // Updates an entity cache in response to any action with response.entities.
 function entities(state = { news: {} }, action) {
-  console.log("entities",action);
   if (action.response && action.response.entities) {
     return merge({}, state, action.response.entities)
   }
