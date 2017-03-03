@@ -13,8 +13,8 @@ import JSONP from './JSONP'
 export default class JSONPAsyncData extends AsyncData{
 
   //增加一个异步success
-  SUCCESS = "success"
-  ERROR = "error2"
+  // SUCCESS = "success"
+  // ERROR = "error2"
   constructor(url, param){
 
     param = param || {};
@@ -25,7 +25,7 @@ export default class JSONPAsyncData extends AsyncData{
     
   }
 
-  subscribe(observer){
+  subscribe(observer, onSuccess = null, onError = null){
     observer.onSendBefore && this.on(this.SEND_BEFORE, function(){
       observer.onSendBefore.apply(observer, arguments)
     });
@@ -38,13 +38,25 @@ export default class JSONPAsyncData extends AsyncData{
       observer.onIOError.apply(observer, arguments)
     });
 
-    observer.onSuccess && this.on(this.SUCCESS, function(){
-      observer.onSuccess.apply(observer, arguments)
-    });
+    if(onSuccess){
+      this.on(this.SUCCESS, function(){
+        options.onSuccess.apply(observer, arguments)
+      });
+    } else if (observer.onSuccess){
+      observer.onSuccess && this.on(this.SUCCESS, function(){
+        observer.onSuccess.apply(observer, arguments)
+      });
+    }
 
-    observer.onError && this.on(this.ERROR, function(){
-      observer.onError.apply(observer, arguments)
-    });
+    if (onError){
+      this.on(this.ERROR, function(){
+        onError.apply(observer, arguments)
+      });
+    } else {
+      observer.onError && this.on(this.ERROR, function(){
+        observer.onError.apply(observer, arguments)
+      });
+    }
 
     return this;
   }
@@ -59,7 +71,7 @@ export default class JSONPAsyncData extends AsyncData{
           this.emit(this.SUCCESS, result);
           reslove(result)
         }else if(result && !result.success){
-          console.log("result error")
+          console.log("result error", result)
           this.emit(this.ERROR, result);
           reject(result)
         }else{
@@ -81,10 +93,11 @@ export default class JSONPAsyncData extends AsyncData{
       this.loadData().then((result)=>{
         //完成
         this.emit(this.COMPLETE, result, this.param);
-      }).catch((e)=>{
+      },(e)=>{
         //错误
         this.emit(this.IO_ERROR, e);
-      });
+      })
+      ;
     })
 
   }
@@ -98,7 +111,7 @@ export default class JSONPAsyncData extends AsyncData{
           param[key] = this.param[key]
         }
       }
-      JSONP(this.url, param, reslove, ()=>{
+      JSONP(this.url, param, reslove, (e)=>{
         reject({msg:"请求错误"})
       });
     });

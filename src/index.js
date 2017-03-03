@@ -5,10 +5,8 @@ import {browserHistory, Router} from 'react-router'
 
 import route from './route'
 
-const history = syncHistoryWithStore(browserHistory, store)
-
 render(
-  <Router history={history}>
+  <Router history={browserHistory}>
     { route }
   </Router>,
 document.getElementById('root')
