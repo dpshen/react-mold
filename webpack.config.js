@@ -160,7 +160,7 @@ if (dev_environment != -1) {
 
   });
   server.listen(port);
-  console.log(`Open http://${hosts}:${port}/index.html`)
+  console.log(`Open http://${hosts}:${port}/react-mold`)
 }
 
 // module.exports = config;
