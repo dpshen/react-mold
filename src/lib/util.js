@@ -1,7 +1,11 @@
 
 import url from 'url';
+import {EventEmitter} from 'events'
+// import event from 'events'
+let ev = new EventEmitter();
 
 let util = {
+  ev: ev,
   query:function(){
     return url.parse(window.location.href, true).query;
   },
@@ -222,6 +226,4 @@ let util = {
   },
 }
 
-window.nihao = util;
 module.exports = util;
-

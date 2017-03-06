@@ -6,14 +6,13 @@
   "scripts": {
     "start": "npm run dev",
     "clear": "rm -rf build",
-    "build": "npm run clear && webpack && npm run dist",
+    "build": "cross-env NODE_ENV=Daily webpack && node singleCI/renderRoute.bundle.js",
     "dev": "cross-env NODE_ENV=dev webpack",
     "dll": "cross-env NODE_ENV=daily webpack --config webpack.dllPlugin.js"
   },
   "author": "dpshen",
   "license": "ISC",
   "dependencies": {
-    "babel-polyfill": "^6.3.14",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
     "react-router": "2.0.0"
@@ -23,6 +22,7 @@
     "babel-loader": "^6.2.0",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.23.0",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
     "babel-preset-react-hmre": "^1.1.1",

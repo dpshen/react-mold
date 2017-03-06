@@ -21,8 +21,8 @@ export default class JSONPAsyncData extends AsyncData{
     param.t = parseInt(Math.random()*100000);
 
     super(url, param);
-
-    
+    this.SUCCESS = "success"
+    this.ERROR = "error2"
   }
 
   subscribe(observer, onSuccess = null, onError = null){
@@ -61,7 +61,7 @@ export default class JSONPAsyncData extends AsyncData{
     return this;
   }
 
-  fetch(){
+  fetch(event){
 
     return new Promise((reslove, reject)=>{
       //监听异步完成事件

@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "520b4e78071ef230db2b"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "8b1da9ab6e244a7be728"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotMainModule = true; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -22369,7 +22369,10 @@ var config = {
   "PROTOCOL": ""
 };
 
-var href = window.location.href;
+var href = "";
+if (window) {
+  href = window;
+}
 
 if (href.indexOf("http://192.168") != -1 || href.indexOf("http://127.0") != -1 || href.indexOf("http://0.0") != -1) {
 
@@ -22378,8 +22381,6 @@ if (href.indexOf("http://192.168") != -1 || href.indexOf("http://127.0") != -1 |
   //   API_DOMAIN: "http://127.0.0.1",
   // }
 }
-
-window.config = config;
 
 exports.default = config;
 
@@ -22436,7 +22437,7 @@ var IndexScreen = function (_React$Component) {
     var _this = (0, _possibleConstructorReturn3.default)(this, (IndexScreen.__proto__ || (0, _getPrototypeOf2.default)(IndexScreen)).call(this, props));
 
     _this.state = {
-      result: "no"
+      result: { data: "no" }
     };
     _this.get();
     return _this;
@@ -22473,7 +22474,7 @@ var IndexScreen = function (_React$Component) {
         _react2.default.createElement(
           'div',
           null,
-          this.state.result
+          this.state.result.data
         )
       );
     }
@@ -22645,10 +22646,8 @@ var AsyncData = function (_events$EventEmitter) {
 
       this.loadData().then(function (result) {
         //完成
-        console.log(1);
         _this2.emit(_this2.COMPLETE, result, _this2.param);
       }).catch(function (e) {
-        console.log("--", e);
         _this2.emit(_this2.COMPLETE, e);
         //错误
         _this2.emit(_this2.IO_ERROR, e);
@@ -22884,6 +22883,9 @@ var JSONPAsyncData = function (_AsyncData) {
   (0, _createClass3.default)(JSONPAsyncData, [{
     key: 'subscribe',
     value: function subscribe(observer) {
+      var onSuccess = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var onError = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
       observer.onSendBefore && this.on(this.SEND_BEFORE, function () {
         observer.onSendBefore.apply(observer, arguments);
       });
@@ -22896,13 +22898,25 @@ var JSONPAsyncData = function (_AsyncData) {
         observer.onIOError.apply(observer, arguments);
       });
 
-      observer.onSuccess && this.on(this.SUCCESS, function () {
-        observer.onSuccess.apply(observer, arguments);
-      });
+      if (onSuccess) {
+        this.on(this.SUCCESS, function () {
+          options.onSuccess.apply(observer, arguments);
+        });
+      } else if (observer.onSuccess) {
+        observer.onSuccess && this.on(this.SUCCESS, function () {
+          observer.onSuccess.apply(observer, arguments);
+        });
+      }
 
-      observer.onError && this.on(this.ERROR, function () {
-        observer.onError.apply(observer, arguments);
-      });
+      if (onError) {
+        this.on(this.ERROR, function () {
+          onError.apply(observer, arguments);
+        });
+      } else {
+        observer.onError && this.on(this.ERROR, function () {
+          observer.onError.apply(observer, arguments);
+        });
+      }
 
       return this;
     }
@@ -22915,9 +22929,7 @@ var JSONPAsyncData = function (_AsyncData) {
         //监听异步完成事件
         _this2.on(_this2.COMPLETE, function (result) {
           //验证返回数据是否正确
-          console.log("==", result);
           if (result && result.success) {
-            console.log("result success");
             _this2.emit(_this2.SUCCESS, result);
             reslove(result);
           } else if (result && !result.success) {
@@ -22943,7 +22955,7 @@ var JSONPAsyncData = function (_AsyncData) {
         _this2.loadData().then(function (result) {
           //完成
           _this2.emit(_this2.COMPLETE, result, _this2.param);
-        }).catch(function (e) {
+        }, function (e) {
           //错误
           _this2.emit(_this2.IO_ERROR, e);
         });
@@ -22963,7 +22975,7 @@ var JSONPAsyncData = function (_AsyncData) {
             param[key] = _this3.param[key];
           }
         }
-        (0, _JSONP2.default)(_this3.url, param, reslove, function () {
+        (0, _JSONP2.default)(_this3.url, param, reslove, function (e) {
           reject({ msg: "请求错误" });
         });
       });

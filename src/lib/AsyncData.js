@@ -13,9 +13,7 @@ export default class AsyncData extends events.EventEmitter {
     super()
     this.SEND_BEFORE = "sendBefore"
     this.COMPLETE = "complete"
-    this.SUCCESS = "success"
     this.IO_ERROR = "ioError"
-    this.ERROR = "error2"
     this.url = url;
     this.param = param;
     // this.data = {};
@@ -41,7 +39,7 @@ export default class AsyncData extends events.EventEmitter {
     this.loadData().then((result)=> {
       //完成
       this.emit(this.COMPLETE, result, this.param);
-    }).catch((e)=> {
+    },(e)=> {
       this.emit(this.COMPLETE, e);
       //错误
       this.emit(this.IO_ERROR, e);

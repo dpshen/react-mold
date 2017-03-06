@@ -31,7 +31,7 @@ var extractLESS = new ExtractTextPlugin('[name].css');
 var entry = {};
 fs.readdirSync(rootPath).map(function (item) {
   if (/\.js$/.test(item) && item != "route.js") {
-    entry[item.replace(".js", "")] = [rootPath + "/" + item]
+    entry[item.replace(".js", "")] = ["babel-polyfill", rootPath + "/" + item]
   }
 });
 
@@ -48,25 +48,27 @@ var config = {
   module: {
     loaders: [
       {
-        test: /(\.js$)|(\.jsx)/,
+        test: /\.jsx?$/,
         exclude: path.resolve(__dirname, 'node_modules/'),
         loader: 'babel-loader',
         query: {
           presets: ['react', 'es2015', 'stage-1'],
-          plugins: ["transform-decorators-legacy", 'transform-runtime']
+          plugins: [
+            "transform-decorators-legacy",
+            'transform-runtime'
+          ]
         }
       },
       {
+        test: /\.jsx?$/,
+        loader: 'es3ify-loader',
+        enforce: 'post'
+      },
+      {
         test: /(\.less$)|(\.css$)/,
-        /**
-         css-loader less-loader autoprefixer
-         extractLESS.extract 独立打包 css文件
-         ['css','less','autoprefixer'] ==> ['css-loader','less-loader','autoprefixer-loader'] 的简写
-         */
         loader: extractLESS.extract(['css', 'less', 'autoprefixer'])
       },
-      { test: /\.json$/, loader: "json-loader" },
-
+      {test: /\.json$/, loader: "json-loader"},
     ]
   },
   plugins: [
@@ -131,17 +133,17 @@ if (dev_environment != -1) {
   var port = "8080";
   var hosts = "127.0.0.1";
 
-  Object.keys(config.entry).map(function(item){
-    config.entry[item].unshift(`webpack-dev-server/client?http://${hosts}:${port}/`,"webpack/hot/dev-server")
+  Object.keys(config.entry).map(function (item) {
+    config.entry[item].unshift(`webpack-dev-server/client?http://${hosts}:${port}/`, "webpack/hot/dev-server")
   })
 
   var compiler = webpack(config);
 
   var server = new WebpackDevServer(compiler, {
     //热加载
-    hot:true,
+    hot: true,
     //热加载必须的 inline
-    inline:true,
+    inline: true,
     quiet: false,
     compress: false,
     historyApiFallback: true,
@@ -161,6 +163,7 @@ if (dev_environment != -1) {
   console.log(`Open http://${hosts}:${port}/index.html`)
 }
 
+// module.exports = config;
 
 module.exports = [config, {
   name: "server-side rendering",
@@ -174,9 +177,9 @@ module.exports = [config, {
   externals: /^[a-z\-0-9]+$/,
   module: {
     loaders: [
-      { test: /\.js$/, loader: "babel-loader" },
-      { test: /\.json$/, loader: "json-loader" },
-      { test: /(\.less$)|(\.css$)/, loader: path.join(__dirname, "singleCI", "style-collector") +"!css!less" },
+      {test: /\.js$/, loader: "babel-loader", query: {presets: ['react', 'es2015', 'stage-1']}},
+      {test: /\.json$/, loader: "json-loader"},
+      {test: /(\.less$)|(\.css$)/, loader: path.join(__dirname, "singleCI", "style-collector") + "!css!less"},
     ]
   }
 }];
